@@ -30,7 +30,7 @@ CREATE TABLE reply
 (
 	rid int NOT NULL AUTO_INCREMENT,
 	content varchar(128) NOT NULL,
-	regDate datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	regDate date DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	isMine int DEFAULT 0 NOT NULL,
 	uid varchar(20) NOT NULL,
 	bid int NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE user
 	pwd char(60) NOT NULL,
 	uname varchar(20) NOT NULL,
 	email varchar(32),
-	regDate datetime DEFAULT (CURRENT_DATE) NOT NULL,
+	regDate date DEFAULT (CURRENT_DATE) NOT NULL,
 	isDel int DEFAULT 0 NOT NULL,
 	PRIMARY KEY (uid)
 );
