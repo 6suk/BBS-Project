@@ -6,27 +6,46 @@
 	LOGIN = "/bbs/user/login", LOGIN_VIEW = "/bbs/user/login.jsp", LOGOUT = "/bbs/user/logout",
 	REG = "/bbs/user/register", REG_VIEW = "/bbs/user/register.jsp", UPDATE = "/bbs/user/update",
 	UPDATE_VIEW = "/bbs/user/update.jsp", DEL = "/bbs/user/delete", MSG = "/bbs/user/msg.jsp",
-	BOARD = "/board/list", BOARD_VIEW = "/board/list.jsp";
+	BOARD = "/bbs/board/list";
 %>
 
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
-	<div class="container-fluid">
-		<ul class="navbar-nav">
-			<a class="navbar-brand ms-5 me-5" href="#"> <img
-				src="../img/ckworld-logo.png" alt="Logo" style="height: 36px;"
-				class="rounded-3">
-			</a>
-			<li class="nav-item"><a class="nav-link" href="#"><i
-					class="fa-solid fa-house"></i> Home</a></li>
-			<li class="nav-item ms-3">
-			<a class="nav-link ${menu eq 'board' ? 'active' : ''}" href="#"><i
-					class="far fa-list-alt"></i> 게시판</a></li>
-			<li class="nav-item ms-3">
-			<a class="nav-link ${menu eq 'user' ? 'active' : ''}" href="<%=LIST%>"><i
-					class="fas fa-user-friends"></i> 사용자</a></li>
-			<li class="nav-item ms-3"><a class="nav-link" href="<%=LOGOUT%>"><i
-					class="fas fa-sign-out-alt"></i> 로그아웃</a></li>
-		</ul>
-		<span class="navbar-text me-3">${uname}님 환영합니다.</span>
-	</div>
-</nav>
+<nav class="navbar navbar-expand navbar-light fixed-top">
+      <div class="container-md px-md-5">
+        <ul class="navbar-nav">
+          <a class="navbar-brand" href="<%= LIST %>">
+          <img src="../img/logo5.png" class="logo"/>
+          </a>
+          <li class="nav-item">
+            <a class="nav-link" href="<%= LIST %>">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link ${menu eq 'board' ? 'active' : ''}" href="<%= BOARD %>">게시판</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link ${menu eq 'user' ? 'active' : ''}" href="<%= LIST %>">사용자</a>
+          </li>
+        </ul>
+        <c:choose>
+        <c:when test="${empty uid}">
+        <ul class="navbar-nav">
+          <li class="nav-item" style="font-weight: 800">
+            <a class="nav-link" href="<%= LOGIN %>">로그인</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<%= REG %>">회원가입</a>
+          </li>
+        </ul>
+        </c:when>
+        <c:otherwise>
+          <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="<%= LOGOUT %>">로그아웃</a>
+          </li>
+        </ul>
+        </c:otherwise>
+        </c:choose>
+        
+        
+        
+      </div>
+    </nav>

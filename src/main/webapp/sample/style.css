@@ -1,0 +1,103 @@
+* {
+  font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    'Pretendard Variable', Pretendard, Roboto, 'Noto Sans KR', 'Segoe UI',
+    'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    sans-serif;
+  color: #333;
+}
+
+tr,
+td,
+th {
+  padding: 25px;
+  text-align: left;
+}
+
+tr:last-child,
+td:last-child {
+  border: none;
+}
+
+input[type='text'],
+[type='date'],
+[type='number'],
+[type='password'],
+[type='email'] {
+  background-color: #e8f0fd8c;
+  font-size: 14px;
+  border: none;
+  padding-inline: 20px;
+  padding-block: 12px;
+  border-radius: 5px;
+}
+
+table {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.contain-01 {
+  display: flex;
+  justify-content: center;
+}
+
+.contain-02 {
+  display: inline-block;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: solid 1px #eee;
+  align-items: flex-end;
+}
+
+.mainbtn {
+  background-color: #4880ee;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.subbtn {
+  background-color: #e8f0fd;
+  color: #4880ee;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+input[type='submit'] {
+  font-size: 15px;
+  height: 49px;
+  border: none;
+  background-color: #4880ee;
+  color: white;
+  padding-inline: 32px;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+}
+
+input[type='button'] {
+  background-color: #e8f0fd;
+  /* border: 1px solid #d7d7d7; */
+  height: 28px;
+  color: #4880ee;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  padding-inline: 10px;
+  cursor: pointer;
+}
+
+h1 {
+  margin: 0;
+}
+
+body {
+  margin-top: 80px;
+  margin-bottom: 100px;
+}

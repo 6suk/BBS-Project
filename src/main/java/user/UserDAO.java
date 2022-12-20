@@ -14,7 +14,6 @@ import javax.sql.DataSource;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-
 public class UserDAO {
 	private static Connection conn;
 
@@ -52,11 +51,15 @@ public class UserDAO {
 	}
 
 	/** 2. 회원 목록 */
-	public List<User> userList() {
+	public List<User> userList(int page) {
 		myGetConn();
-		String sql = "SELECT * FROM user WHERE isdel = '0' ORDER BY regDate DESC, uid LIMIT 10;";
+		int offset = (page - 1) * 10;
+
+		String sql = "SELECT * FROM user " + "WHERE isdel = '0' " + "ORDER BY regDate DESC, uid " + "LIMIT 10 OFFSET "
+				+ offset + ";";
+
 		List<User> list = new ArrayList<>();
-		
+
 		try {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
@@ -70,19 +73,18 @@ public class UserDAO {
 				User user = new User(uid, pwd, uname, email, regDate, isDel);
 				list.add(user);
 			}
-			
+
 			stmt.close();
 			conn.close();
 			rs.close();
-			
+
 		} catch (SQLException e) {
 			System.out.println("[목록 불러오기 오류] : " + e.getMessage());
 		}
-		
-		
+
 		return list;
 	}
-	
+
 	/** 3. 특정 회원 목록 */
 	public User getUserInfo(String uid) {
 		myGetConn();
@@ -101,22 +103,22 @@ public class UserDAO {
 				int isDel = rs.getInt(6);
 				u = new User(uid2, pwd, uname, email, regDate, isDel);
 			}
-			
+
 			pstmt.close();
 			conn.close();
 			rs.close();
-			
+
 		} catch (SQLException e) {
 			System.out.println("[회원 불러오기 오류] : " + e.getMessage());
 		}
 		return u;
 	}
-	
+
 	/** 4. 회원 수정 */
 	public void updateUser(User u) {
 		myGetConn();
 		String sql = "UPDATE user SET pwd = ? , uname = ?, email = ? WHERE uid = ?;";
-		
+
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			String Bpwd = BCrypt.hashpw(u.getPwd(), BCrypt.gensalt());
@@ -125,16 +127,37 @@ public class UserDAO {
 			pstmt.setString(3, u.getEmail());
 			pstmt.setString(4, u.getUid());
 			pstmt.executeUpdate();
-			
-			pstmt.close(); conn.close();
+
+			pstmt.close();
+			conn.close();
 			System.out.println("회원 수정 완료");
 		} catch (SQLException e) {
 			System.out.println("[회원 수정 오류] : " + e.getMessage());
 		}
-		
-		
+
 	}
-	
+
+	/** 4. 회원 수정 */
+	public void nonPwdUpdateUser(User u) {
+		myGetConn();
+		String sql = "UPDATE user SET uname = ?, email = ? WHERE uid = ?;";
+
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, u.getUname());
+			pstmt.setString(2, u.getEmail());
+			pstmt.setString(3, u.getUid());
+			pstmt.executeUpdate();
+
+			pstmt.close();
+			conn.close();
+			System.out.println("회원 수정 완료");
+		} catch (SQLException e) {
+			System.out.println("[회원 수정 오류] : " + e.getMessage());
+		}
+
+	}
+
 	/** 5. 회원 탈퇴 */
 	public void delUser(String uid) {
 		myGetConn();
@@ -143,12 +166,58 @@ public class UserDAO {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, uid);
 			pstmt.executeUpdate();
-			
-			pstmt.close(); conn.close();
+
+			pstmt.close();
+			conn.close();
 			System.out.println("회원 탈퇴 완료");
 		} catch (SQLException e) {
 			System.out.println("[회원 탈퇴 오류] : " + e.getMessage());
 		}
+
+	}
+
+	/** 페이지네이션1 */
+	public int getUserCnt() {
+		myGetConn();
+		String sql = "SELECT COUNT(uid) FROM USER WHERE isDel = 0;";
+		int count = 0;
+
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				count = rs.getInt(1);
+			}
+
+			stmt.close();
+			conn.close();
+			rs.close();
+
+		} catch (SQLException e) {
+			System.out.println("[회원 수 불러오기 오류] : " + e.getMessage());
+		}
+		return count;
+	}
+	
+	/** 페이지네이션2 */
+	public int getUserPageCnt() {
+		myGetConn();
+		String sql = "SELECT COUNT(uid) FROM USER WHERE isDel = 0;";
+		int count = 0;
 		
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				count = rs.getInt(1);
+			}
+			stmt.close();
+			conn.close();
+			rs.close();
+			
+		} catch (SQLException e) {
+			System.out.println("[회원 수 불러오기 오류] : " + e.getMessage());
+		}
+		return (int) Math.ceil(count / 10.);
 	}
 }
