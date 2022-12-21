@@ -28,6 +28,14 @@ public class Board {
 		this.bcontent = bcontent;
 		this.files = files;
 	}
+	/** 게시글 수정 시 */
+	public Board(int bid, String btitle, String bcontent, String files) {
+		super();
+		this.bid = bid;
+		this.btitle = btitle;
+		this.bcontent = bcontent;
+		this.files = files;
+	}
 
 	public Board(int bid, String uid, String btitle, String bcontent, LocalDateTime modtime, int viewCnt, int replyCnt,
 			int isdel, String files, String uname) {

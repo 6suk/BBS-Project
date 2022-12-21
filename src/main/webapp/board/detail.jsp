@@ -1,8 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>	
-	
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
+<%
+pageContext.setAttribute("newline", "\n");
+%>
+
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -11,92 +16,120 @@
 
 <body>
 	<%@ include file="../common/top.jsp"%>
-	
-	
+
+
 	<div class="container">
 		<div class="row" style="justify-content: space-evenly">
 			<%@ include file="../common/aside.jsp"%>
+
+				<div class="inputtb content col-lg-8">
+					<div class="inputtb board-view pb-4">
+						<div>
+							<div class="board-view-bid">
+								<span>${board.bid }</span>
+							</div>
+							<h2 class="board-view-title">${board.btitle }</h2>
+							<div class="board-view-info">
+								<span>${board.uname }</span><span>${fn:replace(board.modtime,'T','
+              ')}</span>
+							</div>
+						</div>
+
+						<div class="content multibtn">
+							<button class="btn action maincolor"
+								onclick="location.href='/bbs/board/list?page=${currentBoardPage}'">
+								목록</button>
+							<div class="space3"></div>
+							<c:choose>
+							<c:when test="${board.uid eq uid }">
+							<button class="btn action subcolor"
+								onclick="location.href='/bbs/board/update?bid=${board.bid}'">
+								수정</button>
+							<div class="space3"></div>
+							<button class="btn action subcolor"
+								onclick="location.href='/bbs/board/delete?bid=${board.bid}'">
+								삭제</button>
+							</c:when>
+							<c:otherwise>
+							<button class="btn action subcolor" disabled >
+								수정</button>
+							<div class="space3"></div>
+							<button class="btn action subcolor" disabled>
+								삭제</button>
+							</c:otherwise>
+							</c:choose>
+						</div>
+					</div>
+
+					<div class="row mt-2 mx-1">
+						<div class="board-view-desc py-3">
+							<div>
+								<p class="board-view-file">
+									<span>첨부파일</span> <a href="#">cat.jpg</a> <a href="#">test.zip</a>
+								</p>
+							</div>
+							<div>
+								<p class="board-view-cnt">
+									<span>조회 ${board.viewCnt }</span><span>댓글 ${board.replyCnt }</span>
+								</p>
+							</div>
+						</div>
+
+						<div class="board-view-content py-5">
+							${fn:replace(board.bcontent, newline, '<br>') }</div>
+
+						<!-- 댓글 -->
+						<div class="reply-content pt-3">
+							<c:forEach var="r" items="${rList }">
+								<c:choose>
+								<c:when test="${r.ismine eq 1}">
+									<!-- 내가 쓴 댓글 -->
+									<div class="d-flex flex-row-reverse mt-3">
+										<div class="card subcolor w-75">
+											<div class="card-body text-end">
+												<div class="reply-info">
+													<span>${r.uname }</span>
+													<span>${fn:replace(r.regtime,'T','')}</span>
+												</div>
+												<div class="line"></div>
+												<div class="reply-content">${fn:replace(r.rcontent, newline, '<br>') }</div>
+											</div>
+										</div>
+									</div>								
+								</c:when>
+								<c:otherwise>
+									<!-- 남이 쓴 댓글 -->
+									<div class="d-flex flex-row mt-3">
+										<div class="card graycolor w-75">
+											<div class="card-body">
+												<div class="reply-info">
+													<span>${r.uname }</span>
+													<span>${fn:replace(r.regtime,'T','')}</span>
+												</div>
+												<div class="line"></div>
+												<div class="reply-content">${fn:replace(r.rcontent, newline, '<br>') }</div>
+											</div>
+										</div>
+									</div>
+								</c:otherwise>
+								</c:choose>
+							</c:forEach>
 			
-		<div class="inputtb content col-lg-8">
-			<div class="inputtb content-title pb-4">
-				<h3>${board.btitle }</h3>
-				<div class="content-multibtn">
-					<button class="btn small maincolor" onclick="location.href='/bbs/board/list?page=${currentBoardPage}'">
-						목록</button>
-					<c:choose>
-					<c:when test="${board.uid eq uid}">
-						<button class="btn small subcolor" onclick="location.href='/bbs/board/update?bid=${board.bid}'">
-						수정</button>
-						<button class="btn small subcolor" onclick="location.href='/bbs/board/delete?bid=${board.bid}'">
-						삭제</button>
-					</c:when>
-					<c:otherwise>
-						<button class="btn small subcolor" disabled>
-						수정</button>
-						<button class="btn small subcolor" disabled>
-						삭제</button>
-					</c:otherwise>
-					</c:choose>
+
+
+							<form class="form-inline" action="/bbs/board/reply" method="post">
+								<input type="hidden" name="bid" value="${board.bid }" />
+								<input type="hidden" name="uid" value="${board.uid }" />
+								<div class="reply-write pt-4">
+									<textarea class="board-input" id="content" name="content"
+										rows="3" placeholder="댓글작성"></textarea>
+									<div class="space10"></div>
+									<button type="submit" class="btn maincolor">등록</button>
+								</div>
+							</form>
+						</div>
+					</div>
 				</div>
-			</div>
-
-                <div class="row mt-2 mx-1">
-                    <div class="borad inputtb content-title py-3">
-                    	<div>
-                        <p>글번호 : ${board.bid } | 작성일 : ${fn:replace(board.modtime,'T',' ')}</p>
-                        <p>첨부파일 : <a href="#" class = "on">cat.jpg</a> / <a href="#" class = "on">test.zip</a></p>
-                        </div>
-                        <div>
-                        <h5>${board.uname }</h5>
-                        <p>조회 ${board.viewCnt }&nbsp;&nbsp;댓글 ${board.replyCnt }</p>
-                        </div>
-                    </div>
-
-                    <div class="content detail py-5">
-                        ${board.bcontent }
-                    </div>
-
-                    <div class="col-12"><hr></div>
-                    <div class="col-12">
-                        <div class="d-flex flex-row mt-1">
-                            <div class="card bg-light text-dark w-75">
-                                <div class="card-body">
-                                    마리아&nbsp;&nbsp;2022-05-17 14:30:28<br>    <!-- uname, regTime-->
-                                    저도 궁금합니다.😆  <!-- content -->
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex flex-row-reverse mt-1">
-                            <div class="card w-75">
-                                <div class="card-body text-end">
-                                    로버트 엘리엇&nbsp;&nbsp;2022-05-17 14:30:28<br>    <!-- uname, regTime-->
-                                    email로 문의해 주시면 친절하게 안내해 드릴게요.😄👍😆  <!-- content -->
-                                </div>
-                            </div>
-                        </div>
-                            
-                        <form class="form-inline" action="/bbs/reply" method="post">
-                            <input type="hidden" name="bid" value="">     <!-- bid -->
-                            <input type="hidden" name="uid" value="">     <!-- uid -->
-                            <table class="table table-borderless mt-2">
-                                <tr class="d-flex">
-                                    <td class="col-1 text-end">
-                                        <label for="content">댓글</label>
-                                    </td>
-                                    <td class="col-9">
-                                        <textarea class="form-control" id="content" name="content" rows="3"></textarea>
-                                    </td>
-                                    <td class="col-2">
-                                        <button type="submit" class="btn btn-primary">등록</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </form>
-                    </div>
-                </div>
-
-            </div>
 		</div>
 	</div>
 	<%@ include file="../common/bottom.jsp"%>

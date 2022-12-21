@@ -41,18 +41,18 @@
 							<td>
 							<c:choose>
 								<c:when test="${uid ne u.uid}">
-									<button class="btn subcolor" type="button" disabled>수정</button>
+									<button class="btn action subcolor" type="button" disabled>수정</button>
 								</c:when>
 								<c:otherwise>
-									<button class="btn subcolor" type="button"
+									<button class="btn action subcolor" type="button"
 										onclick="location.href='<%= UPDATE %>?uid=${u.uid}'">수정</button>
 								</c:otherwise>
 							</c:choose> <%-- 삭제 버튼 시작 --%> <c:choose>
 								<c:when test="${uid ne 'admin'}">
-									<button class="btn subcolor" type="button" disabled>삭제</button>
+									<button class="btn action subcolor" type="button" disabled>삭제</button>
 								</c:when>
 								<c:otherwise>
-									<button class="btn subcolor" type="button"
+									<button class="btn action subcolor" type="button"
 										onclick="location.href='<%= DEL %>?uid=${u.uid}'">삭제</button>
 								</c:otherwise>
 							</c:choose>

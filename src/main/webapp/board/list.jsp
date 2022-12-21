@@ -22,14 +22,14 @@
 				<div class="content-title pb-3">
 					<h3>게시판</h3>
 					<div class="">
-						<button class="btn maincolor" onclick="location.href='/bbs/board/write'">
+						<button class="btn mdi maincolor" onclick="location.href='/bbs/board/write'">
 							글쓰기</button>
 					</div>
 				</div>
 				<table class="content-desc">
 					<tr>
 						<th>no.</th>
-						<th>제목</th>
+						<th class = "board-list title">제목</th>
 						<th>글쓴이</th>
 						<th>날짜/시간</th>
 						<th>조회수</th>
@@ -39,15 +39,15 @@
 						<td>${b.bid}</td>
 						<c:choose>
 						<c:when test="${b.replyCnt > 0 }">
-						<td>
-							<a href = "/bbs/board/detail?bid=${b.bid }">${b.btitle}
-							<span class = "content-reply">[${b.replyCnt }]</span>
+						<td class = "board-list title">
+							<a href = "/bbs/board/detail?bid=${b.bid }&uid=${b.uid }">${b.btitle}
+							<span class = "content-reply">${b.replyCnt }</span>
 							</a>						
 						</td>						
 						</c:when>
 						<c:otherwise>
-						<td>
-							<a href = "/bbs/board/detail?bid=${b.bid }">${b.btitle}</a>						
+						<td class = "board-list title">
+							<a href = "/bbs/board/detail?bid=${b.bid }&uid=${b.uid }">${b.btitle}</a>						
 						</td>						
 						</c:otherwise>
 						</c:choose>
@@ -58,7 +58,8 @@
 							<td>${fn:substringAfter(b.modtime, 'T')}</td>
 						</c:when>
 						<c:otherwise>
-							<td>${fn:replace(b.modtime,'T',' ')}</td>
+							<%-- <td>${fn:replace(b.modtime,'T',' ')}</td> --%>
+							<td>${fn:substringBefore(b.modtime, 'T')}</td>
 						</c:otherwise>
 						</c:choose>
 						<td>${b.viewCnt }</td>
@@ -74,7 +75,7 @@
 							</li>
 							<c:forEach var="page" items="${pageList}">
 								<li class="page-item ${(currentBoardPage eq page) ? 'active' : ''}">
-								<a class="page-link" href="<%= BOARD %>?page=${page}">${page}</a></li>
+								<a class="page-link" href="<%= BLIST %>?page=${page}">${page}</a></li>
 							</c:forEach>							
 							<li class="page-item"><a class="page-link" href="#">&gt;</a>
 							</li>

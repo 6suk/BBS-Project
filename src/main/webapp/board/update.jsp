@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -17,43 +19,35 @@
 			<div class="inputtb content col-lg-8">
 				<!-- 타이틀 -->
 				<div class="inputtb content-title pb-4">
-					<h3>게시글 쓰기</h3>
+					<h3>${binfo.bid }번 게시글 수정</h3>
 					<div class="">
 						<button class="btn small subcolor"
-							onclick="location.href='/bbs/board/list?page=${currentBoardPage}'">&lt; List</button>
+							onclick="location.href='/bbs/board/list?page=${currentBoardPage}'">&lt; Back</button>
 					</div>
 				</div>
 				<!-- 타이틀 끝 -->
 
-				<form action="/bbs/board/write" class="pt-4 mx-3" method="post">
+				<form action="/bbs/board/update" class="pt-4 mx-3" method="post">
+				<input type="hidden" name="bid" value="${binfo.bid }">
 					<table class="inputtb board-desc">
 						<tr>
 							<td><input class="board-input" type="text" placeholder="제목"
-								name="title" maxlength="128" required /></td>
+								name="title" maxlength="128" required value="${binfo.btitle }"/></td>
 						</tr>
 						<tr>
 							<td><textarea class="board-input" name="content"
-									placeholder="내용" maxlength="5000" rows="10"></textarea>
+									placeholder="내용" maxlength="5000" rows="10">${binfo.bcontent }</textarea>
 							</td>
 						</tr>
 						<tr>
 							<td>
-							<div class = "board-input file" style = "display: flex;">
-								<div style = "display: flex;">
-								<label for="files">파일1</label>
-								<input class="board-input" type="file" placeholder="첨부파일1" name="files" />
-								</div>
-								<div class = "space10"></div>
-								<div style = "display: flex;">
-								<label for="files">파일2</label>
-								<input class="board-input" type="file" placeholder="첨부파일1" name="files" />
-								</div>
-							</div>
+								<!-- <label for="files"></label> --> <input class="board-input"
+								type="file" placeholder="첨부파일" name="files" multiple value="${binfo.files }"/>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="2" class="multibtn pt-4"><input type="submit"
-								class="btn full maincolor" value="글쓰기" />
+								class="btn full maincolor" value="수정하기" />
 								<div class="space10"></div> <input type="reset"
 								class="btn full subcolor" value="취소" /></td>
 						</tr>

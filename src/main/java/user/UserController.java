@@ -25,6 +25,9 @@ public class UserController extends HttpServlet {
 			LOGIN_VIEW = "/user/login.jsp", LOGOUT = "/user/logout", REG = "/user/register",
 			REG_VIEW = "/user/register.jsp", UPDATE = "/user/update", UPDATE_VIEW = "/user/update.jsp",
 			DEL = "/user/delete", MSG = "/user/msg.jsp";
+	private static final String BLIST = "/board/list", WRITE = "/board/write", BUPDATE = "/board/update",
+			BDETAIL = "/board/detail", BDEL = "/board/delete", BDEL_CON = "/board/deleteConfirm",
+			SEARCH = "/board/search", REPLY = "/board/reply";
 	private User u;
 	private String uid, pwd, Uname;
 	private int page;
@@ -57,6 +60,7 @@ public class UserController extends HttpServlet {
 			break;
 
 		case REG:
+			ss.setAttribute("menu", "reg");
 			switch (method) {
 			case "GET":
 				Forward(request, response, REG_VIEW);
@@ -87,7 +91,7 @@ public class UserController extends HttpServlet {
 						SetSession(ss, uid);
 						// 메세지 -> LIST
 						request.setAttribute("msg", u.getUname() + "님 환영합니다!");
-						request.setAttribute("url", LIST);
+						request.setAttribute("url", BLIST);
 						Forward(request, response, MSG);
 					}
 				} else {
@@ -102,6 +106,7 @@ public class UserController extends HttpServlet {
 		case LOGIN:
 			switch (method) {
 			case "GET":
+				ss.setAttribute("menu", "login");
 				Forward(request, response, LOGIN_VIEW);
 				break;
 
@@ -116,7 +121,7 @@ public class UserController extends HttpServlet {
 						SetSession(ss, uid);
 						// 메세지 -> LIST
 						request.setAttribute("msg", u.getUname() + "님 환영합니다!");
-						request.setAttribute("url", LIST);
+						request.setAttribute("url", BLIST);
 						Forward(request, response, MSG);
 					} else { // 패스워드 불일치
 						// 메세지 -> LOGIN
@@ -147,6 +152,7 @@ public class UserController extends HttpServlet {
 			break;
 
 		case UPDATE:
+			ss.setAttribute("menu", "user");
 			switch (method) {
 			case "GET":
 				uid = request.getParameter("uid");
@@ -176,7 +182,7 @@ public class UserController extends HttpServlet {
 					SetSession(ss, uid);
 					// 메세지 -> LIST
 					request.setAttribute("msg", uid + " : 정보 수정 완료!");
-					request.setAttribute("url", LIST);
+					request.setAttribute("url", LIST+"?page="+ss.getAttribute("currentUserPage"));
 					Forward(request, response, MSG);
 				} else {
 					request.setAttribute("msg", "입력된 패스워드가 다릅니다!");
@@ -188,12 +194,14 @@ public class UserController extends HttpServlet {
 			break;
 
 		case DEL:
+			ss.setAttribute("menu", "user");
 			uid = request.getParameter("uid");
 			request.setAttribute("deluid", uid);
 			Forward(request, response, DEL + ".jsp");
 			break;
 
 		case "/user/deleteConfirm":
+			ss.setAttribute("menu", "user");
 			uid = request.getParameter("uid");
 			u = dao.getUserInfo(uid);
 			dao.delUser(uid);

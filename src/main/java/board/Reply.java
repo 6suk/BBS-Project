@@ -73,6 +73,43 @@ public class Reply {
 	public String getUname() {
 		return uname;
 	}
+
+	public void setRid(int rid) {
+		this.rid = rid;
+	}
+
+	public void setRcontent(String rcontent) {
+		this.rcontent = rcontent;
+	}
+
+	public void setRegtime(LocalDateTime regtime) {
+		this.regtime = regtime;
+	}
+	public void setRegtime(String regtime) {
+		this.regtime = LocalDateTime.parse(regtime, dtf);
+	}
+
+	public void setIsmine(int ismine) {
+		this.ismine = ismine;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public void setBid(int bid) {
+		this.bid = bid;
+	}
+
+	public void setUname(String uname) {
+		this.uname = uname;
+	}
+
+	@Override
+	public String toString() {
+		return "Reply [rid=" + rid + ", rcontent=" + rcontent + ", regtime=" + regtime + ", ismine=" + ismine + ", uid="
+				+ uid + ", bid=" + bid + ", uname=" + uname + "]";
+	}
 	
 	
 
