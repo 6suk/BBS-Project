@@ -102,19 +102,21 @@ public class BoardDao {
 	}
 
 	/** 페이지네이션2 */
-	public int getBoardPageCnt() {
+	public int getBoardPageCnt(String field, String query) {
 		myGetConn();
-		String sql = "SELECT COUNT(title) FROM board WHERE isDel = 0;";
+		String sql = "SELECT COUNT(bid) FROM board AS b\r\n" + "JOIN USER AS u\r\n" + "ON b.uid = u.uid\r\n"
+				+ "WHERE b.isDel = 0 AND " + field + " LIKE ?;";
 		int count = 0;
 
 		try {
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%" + query + "%");
+			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				count = rs.getInt(1);
 			}
 
-			stmt.close();
+			pstmt.close();
 			conn.close();
 			rs.close();
 
@@ -163,7 +165,8 @@ public class BoardDao {
 				b.setModtime(rs.getString(5));
 				b.setViewCnt(rs.getInt(6));
 				b.setReplyCnt(rs.getInt(7));
-				b.setUname(rs.getString(8));
+				b.setFiles(rs.getString(8));
+				b.setUname(rs.getString(9));
 			}
 			pstmt.close();
 			rs.close();
@@ -232,13 +235,12 @@ public class BoardDao {
 			pstmt.setString(3, b.getFiles());
 			pstmt.setInt(4, b.getBid());
 			pstmt.executeUpdate();
-			
+
 			pstmt.close();
 			conn.close();
 		} catch (SQLException e) {
 			System.out.println("[게시글 수정 오류] : " + e.getMessage());
 		}
-		
 
 	}
 

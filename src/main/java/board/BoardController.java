@@ -20,14 +20,16 @@ import com.google.protobuf.Empty;
 public class BoardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private RequestDispatcher rd;
-	private BoardDao dao = new BoardDao();
+	private static BoardDao dao = new BoardDao();
 	private ReplyDao rdao = new ReplyDao();
 	private static final String BLIST = "/board/list", WRITE = "/board/write", BUPDATE = "/board/update",
 			BDETAIL = "/board/detail", BDEL = "/board/delete", BDEL_CON = "/board/deleteConfirm",
 			SEARCH = "/board/search", REPLY = "/board/reply", MSG = "/user/msg.jsp";
 	private Board b;
-	private String uid, pwd, Uname, title, content, files;
+	private String uid, pwd, Uname, title, content, files, field, query;
 	private int page, bid;
+	private LocalDate today =  LocalDate.now(); // 0000-00-00 00:00:00
+	private List<Board> list;
 
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -36,26 +38,33 @@ public class BoardController extends HttpServlet {
 		HttpSession ss = request.getSession();
 		ss.setAttribute("menu", "board");
 		String ssuid = (String) ss.getAttribute("uid");
+		/** Get field, query */
+		String field = request.getParameter("field") == null ? "title" : request.getParameter("field");
+		String query = request.getParameter("query") == null ? "" : request.getParameter("query");
+		int page = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page"));
 
 		switch (request.getServletPath()) {
 
 		case BLIST:
-			if (request.getParameter("page") == null) {
-				response.sendRedirect("/bbs" + BLIST + "?page=1");
-			} else {
-				LocalDate today = LocalDate.now(); // 0000-00-00 00:00:00
 				request.setAttribute("today", today);
+				/** 페이지네이션 세팅 */
+				setPagination(request, page, field, query);
 
-				/** 페이지네이션 */
-				page = Integer.parseInt(request.getParameter("page"));
-				ss.setAttribute("currentBoardPage", page);
-				request.setAttribute("pageList", getPagination());
-
-				/** 리스트 */
-				List<Board> list = dao.boardList("title", "", page);
+				/** 리스트 출력 */
+				list = dao.boardList(field, query, page);
 				request.setAttribute("boardList", list);
 				Forward(request, response, BLIST + ".jsp");
-			}
+			break;
+
+		case SEARCH:
+			request.setAttribute("today", today);
+			/** 페이지네이션 세팅 */
+			setPagination(request, page, field, query);
+			
+			/** 리스트 출력 */
+			list = dao.boardList(field, query, page);
+			request.setAttribute("boardList", list);
+			Forward(request, response, BLIST + ".jsp");
 			break;
 
 		case WRITE:
@@ -65,12 +74,12 @@ public class BoardController extends HttpServlet {
 			}
 			/** POST */
 			else {
-				title = request.getParameter("title");
-				content = request.getParameter("content");
-				files = request.getParameter("files");
+				title = (String) request.getAttribute("title");
+				content = (String) request.getAttribute("content");
+				files = (String) request.getAttribute("files");
 				b = new Board(ssuid, title, content, files);
 				dao.insertBoard(b);
-				Forward(request, response, BLIST);
+				response.sendRedirect("/bbs" + BLIST);
 			}
 			break;
 
@@ -152,15 +161,31 @@ public class BoardController extends HttpServlet {
 		rd = request.getRequestDispatcher(url);
 		rd.forward(request, response);
 	}
-
-	private static List<String> getPagination() {
+	
+	/** ver1 pagination */
+	private static List<String> getPagination(String field, String query) {
 		BoardDao dao = new BoardDao();
-		int totalPages = dao.getBoardPageCnt();
+		int totalPages = dao.getBoardPageCnt(field, query);
 		List<String> pageList = new ArrayList<>();
 		for (int i = 1; i <= totalPages; i++)
 			pageList.add(String.valueOf(i));
 
 		return pageList;
+	}
+	
+	/** ver2 pagination */
+	private static void setPagination(HttpServletRequest request, int page, String field, String query) {
+		HttpSession ss = request.getSession();
+		List<String> pageList = new ArrayList<>();
+		
+		/** DB에서 총 페이지 개수 받아 pageList에 담기 */
+		int totalPages = dao.getBoardPageCnt(field, query);
+		for (int i = 1; i <= totalPages; i++)
+			pageList.add(String.valueOf(i));
+		
+		/** 세션 세팅 / 리퀘스트 세팅 */
+		ss.setAttribute("currentBoardPage", page);	// 현재 페이지 세션 저장
+		request.setAttribute("pageList", pageList);	// 페이지네이션 리스트 저장
 	}
 
 }

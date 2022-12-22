@@ -25,7 +25,7 @@
 				</div>
 				<!-- 타이틀 끝 -->
 
-				<form action="/bbs/board/write" class="pt-4 mx-3" method="post">
+				<form action="/bbs/board/mulupload" class="pt-4 mx-3" method="post" enctype="multipart/form-data">
 					<table class="inputtb board-desc">
 						<tr>
 							<td><input class="board-input" type="text" placeholder="제목"
@@ -38,17 +38,7 @@
 						</tr>
 						<tr>
 							<td>
-							<div class = "board-input file" style = "display: flex;">
-								<div style = "display: flex;">
-								<label for="files">파일1</label>
-								<input class="board-input" type="file" placeholder="첨부파일1" name="files" />
-								</div>
-								<div class = "space10"></div>
-								<div style = "display: flex;">
-								<label for="files">파일2</label>
-								<input class="board-input" type="file" placeholder="첨부파일1" name="files" />
-								</div>
-							</div>
+							<input class="board-input" type="file" placeholder="첨부파일1" name="files" multiple />
 							</td>
 						</tr>
 						<tr>

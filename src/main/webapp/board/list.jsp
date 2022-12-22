@@ -82,12 +82,12 @@
 						</ul>
 					</div>
 
-					<form class="content-search" action="" method="post">
-						<select class="content-search-inner subcolor tran">
-							<option value="1" selected>제목</option>
-							<option value="2">본문</option>
-							<option value="3">글쓴이</option>
-						</select> <input type="search" class="content-search-inner subcolor tran" />
+					<form class="content-search" action="/bbs/board/search" method="post">
+						<select class="content-search-inner subcolor tran" name="field">
+							<option value="title" selected>제목</option>
+							<option value="content">본문</option>
+							<option value="uname">글쓴이</option>
+						</select> <input type="search" class="content-search-inner subcolor tran" name = "query"/>
 						<button class="btn maincolor" type="submit">검색</button>
 					</form>
 				</div>
