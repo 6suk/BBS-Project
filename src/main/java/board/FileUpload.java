@@ -2,6 +2,7 @@ package board;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -15,8 +16,10 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-@WebServlet("/board/mulupload")
-public class MulUpload extends HttpServlet {
+import misc.JSONUtil;
+
+@WebServlet("/board/fileUpload")
+public class FileUpload extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -34,7 +37,9 @@ public class MulUpload extends HttpServlet {
 		ServletFileUpload fu = new ServletFileUpload(factory);
 		fu.setSizeMax(1024 * 1024 * 100); // maxRequestSize 전체 파일 용량
 		fu.setFileSizeMax(1024 * 1024 * 10); // maxFileSize 파일 한개당 용량
-
+		
+		List<String> fileList = new ArrayList<>();
+		
 		try {
 			List<FileItem> items = fu.parseRequest(request);
 			/** 파일 저장 */
@@ -44,15 +49,17 @@ public class MulUpload extends HttpServlet {
 					String fileName = i.getName();
 					File uploadFile = new File(tmpPath + File.separator + fileName);
 					i.write(uploadFile); // 임시 파일을 파일로 씀
-					request.setAttribute("files", tmpPath + File.separator + fileName);
+					fileList.add(fileName);
 				}
 				// 다른 타입 request일 때
 				else if (i.isFormField()) {
-					System.out.println(i.getContentType());
 					request.setAttribute(i.getFieldName(), i.getString("UTF-8"));
-					System.out.println(i.getFieldName() + i.getString("UTF-8"));
 				}
 			}
+			JSONUtil json = new JSONUtil();
+			String jsonList = json.stringify(fileList);
+			request.setAttribute("files", jsonList);
+			
 			RequestDispatcher rd = request.getRequestDispatcher("/board/write");
 			rd.forward(request, response);
 		} catch (Exception e) {

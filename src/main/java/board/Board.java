@@ -2,6 +2,7 @@ package board;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class Board {
 	public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -16,6 +17,8 @@ public class Board {
 	private int isdel;
 	private String files;
 	private String uname;
+	private List<String> rootList;
+	private List<String> fileList;
 
 	public Board() {
 	}
@@ -28,6 +31,17 @@ public class Board {
 		this.bcontent = bcontent;
 		this.files = files;
 	}
+	
+	/** 게시글 작성 시 ver2 */
+	public Board(String uid, String btitle, String bcontent, List<String> rootList, List<String> fileList) {
+		super();
+		this.uid = uid;
+		this.btitle = btitle;
+		this.bcontent = bcontent;
+		this.rootList = rootList;
+		this.fileList = fileList;
+	}
+
 	/** 게시글 수정 시 */
 	public Board(int bid, String btitle, String bcontent, String files) {
 		super();
@@ -63,6 +77,7 @@ public class Board {
 		this.replyCnt = replyCnt;
 		this.uname = uname;
 	}
+	
 
 	public Board(int bid, String uid, String btitle, String bcontent, String modtime, int viewCnt, int replyCnt,
 			int isdel, String files, String uname) {

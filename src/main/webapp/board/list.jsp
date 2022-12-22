@@ -82,7 +82,7 @@
 						</ul>
 					</div>
 
-					<form class="content-search" action="/bbs/board/search" method="post">
+					<form class="content-search" action="/bbs/board/list" method="post">
 						<select class="content-search-inner subcolor tran" name="field">
 							<option value="title" selected>제목</option>
 							<option value="content">본문</option>

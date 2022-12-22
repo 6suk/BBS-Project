@@ -2,8 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
 <%
+
 pageContext.setAttribute("newline", "\n");
 %>
 
@@ -65,7 +65,18 @@ pageContext.setAttribute("newline", "\n");
 						<div class="board-view-desc py-3">
 							<div>
 								<p class="board-view-file">
-									<span>첨부파일</span> <a href="#">cat.jpg</a> <a href="#">test.zip</a>
+									<c:choose>
+									<c:when test="${fileList eq null}">
+									<span>첨부파일</span>
+									<span>없음</span>
+									</c:when>
+									<c:otherwise>
+									<span>첨부파일</span>
+									<c:forEach var="file" items="${fileList }">
+										<a href="c:/Temp/upload/${file }" download>${file }</a>
+									</c:forEach>
+									</c:otherwise>
+									</c:choose>
 								</p>
 							</div>
 							<div>

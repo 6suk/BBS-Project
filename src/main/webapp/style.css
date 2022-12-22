@@ -452,7 +452,7 @@ input[type='file'] {
   color: #666;
 }
 
-.board-view-file span::after {
+.board-view-file span:first-child::after {
   margin: 10px;
   content: '';
   border-right: 1px solid #dcdcdc;
