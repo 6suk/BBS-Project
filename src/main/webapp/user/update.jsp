@@ -43,7 +43,7 @@
 					</tr>
 					<tr>
 						<th>이메일</th>
-						<td><input type="hidden" name="email" value="null" />
+						<td><!-- <input type="hidden" name="email" value="null" /> -->
 						<c:choose>
 								<c:when test="${empty user.email}">
 									<input type="email" name="email" placeholder="이메일"

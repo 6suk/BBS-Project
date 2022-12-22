@@ -29,7 +29,7 @@ public class UserController extends HttpServlet {
 			BDETAIL = "/board/detail", BDEL = "/board/delete", BDEL_CON = "/board/deleteConfirm",
 			SEARCH = "/board/search", REPLY = "/board/reply";
 	private User u;
-	private String uid, pwd, Uname;
+	private String uid, pwd, Uname, email;
 	private int page;
 
 	protected void service(HttpServletRequest request, HttpServletResponse response)
@@ -70,13 +70,11 @@ public class UserController extends HttpServlet {
 				uid = request.getParameter("uid");
 				String[] pwdBox = request.getParameterValues("pwd");
 				Uname = request.getParameter("uname");
-
-				/** 이메일 미기입 시 */
-				emailReg = request.getParameterValues("email");
-				if (!emailReg[1].isEmpty())
-					u = new User(uid, pwdBox[0], Uname, emailReg[1]);
-				else
-					u = new User(uid, pwdBox[0], Uname);
+				email = request.getParameter("email");
+				
+				if(email.isEmpty()) u = new User(uid, pwdBox[0], Uname);
+				else u = new User(uid, pwdBox[0], Uname, email);
+				
 
 				/** 아이디 중복 검사 */
 				if (dao.getUserInfo(uid).getUid() == null) {
@@ -167,13 +165,11 @@ public class UserController extends HttpServlet {
 				String pwdbox[] = request.getParameterValues("pwd");
 
 				/** 이메일 미기입 시 */
-				emailReg = request.getParameterValues("email");
-				if (!emailReg[1].isEmpty())
-					u = new User(uid, pwd, Uname, emailReg[1]);
-				else
-					u = new User(uid, pwd, Uname);
-
-				if (pwdbox.equals("") || pwdbox == null) {
+				email = request.getParameter("email");
+				if(email.isEmpty()) u = new User(uid, pwdbox[0], Uname);
+				else u = new User(uid, pwdbox[0], Uname, email);
+						
+				if (pwd.isEmpty()) {
 					dao.nonPwdUpdateUser(u);
 					SetSession(ss, uid);
 					response.sendRedirect(LIST);
