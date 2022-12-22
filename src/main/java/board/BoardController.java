@@ -13,8 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet({ "/board/list", "/board/write", "/board/update", "/board/detail", "/board/delete",
-		"/board/deleteConfirm", "/board/reply" })
+import misc.JSONUtil;
+
+@WebServlet({ "/board/list", "/board/write", "/board/update", "/board/detail", "/board/delete", "/board/deleteConfirm",
+		"/board/reply" })
 public class BoardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private RequestDispatcher rd;
@@ -44,7 +46,7 @@ public class BoardController extends HttpServlet {
 		switch (request.getServletPath()) {
 
 		case BLIST:
-			// LIST + SEARCH (OST)
+			// LIST + SEARCH (POST)
 			request.setAttribute("today", today);
 			/** 페이지네이션 세팅 */
 			setPagination(request, page, field, query);
@@ -83,7 +85,14 @@ public class BoardController extends HttpServlet {
 			}
 			Board b = dao.getBoardDetail(bid);
 			request.setAttribute("board", b);
-			
+
+			String jsonFiles = b.getFiles();
+			if (jsonFiles != null && jsonFiles != "") {
+				JSONUtil json = new JSONUtil();
+				List<String> fileList = json.parse(jsonFiles);
+				request.setAttribute("fileList", fileList);
+			}
+
 			List<Reply> rlist = rdao.replyList(bid);
 			request.setAttribute("rList", rlist);
 
