@@ -73,7 +73,7 @@ pageContext.setAttribute("newline", "\n");
 									<c:otherwise>
 									<span>첨부파일</span>
 									<c:forEach var="file" items="${fileList }">
-										<a href="c:/Temp/upload/${file }" download>${file }</a>
+										<a href="/bbs/board/download?file=${file}">${file }</a>
 									</c:forEach>
 									</c:otherwise>
 									</c:choose>

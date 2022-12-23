@@ -4,6 +4,7 @@
 <html lang="ko">
 <head>
 <%@ include file="../common/heading.jsp"%>
+<script src="https://cdn.ckeditor.com/4.18.0/standard/ckeditor.js"></script>
 </head>
 
 <body>
@@ -28,7 +29,7 @@
 				<form action="/board/fileUpload" class="pt-4 mx-3" method="post" enctype="multipart/form-data">
 					<table class="inputtb board-desc">
 						<tr>
-							<td><input class="board-input" type="text" placeholder="제목"
+							<td><input style = "border: 1px solid #d1d1d1;" class="board-input" type="text" placeholder="제목"
 								name="title" maxlength="128" required /></td>
 						</tr>
 						<tr>
@@ -38,7 +39,7 @@
 						</tr>
 						<tr>
 							<td>
-							<input class="board-input" type="file" placeholder="첨부파일1" name="files" multiple />
+							<input style = "border: 1px solid #d1d1d1;" class="board-input" type="file" placeholder="첨부파일1" name="files" multiple />
 							</td>
 						</tr>
 						<tr>
@@ -53,5 +54,12 @@
 		</div>
 	</div>
 	<%@ include file="../common/bottom.jsp"%>
+	<script>
+        CKEDITOR.replace('content', {
+            filebrowserImageUploadUrl: '/bbs/board/imageupload',
+            filebrowserUploadMethod: 'form',
+            height:400
+        });
+    </script>
 </body>
 </html>
