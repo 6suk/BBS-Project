@@ -26,7 +26,7 @@
 				</div>
 				<!-- 타이틀 끝 -->
 
-				<form action="/bbs/board/fileUpload" class="pt-4 mx-3" method="post" enctype="multipart/form-data">
+				<form action="<%= FILEUP %>=write" class="pt-4 mx-3" method="post" enctype="multipart/form-data">
 					<table class="inputtb board-desc">
 						<tr>
 							<td><input style = "border: 1px solid #d1d1d1;" class="board-input" type="text" placeholder="제목"
@@ -39,7 +39,7 @@
 						</tr>
 						<tr>
 							<td>
-							<input style = "border: 1px solid #d1d1d1;" class="board-input" type="file" placeholder="첨부파일1" name="files" multiple />
+							<input style = "border: 1px solid #d1d1d1;" class="board-input" type="file" name="files" multiple />
 							</td>
 						</tr>
 						<tr>

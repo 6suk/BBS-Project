@@ -65,9 +65,13 @@ public class BoardController extends HttpServlet {
 			}
 			/** POST */
 			else {
+				JSONUtil json = new JSONUtil();
+				List<String> fileList = (List<String>) request.getAttribute("fileList");
+				System.out.println(fileList.toString());
+				
 				title = (String) request.getAttribute("title");
 				content = (String) request.getAttribute("content");
-				files = (String) request.getAttribute("files");
+				files = json.stringify(fileList);
 				b = new Board(ssuid, title, content, files);
 				dao.insertBoard(b);
 				response.sendRedirect(BBS + BLIST);
@@ -86,7 +90,6 @@ public class BoardController extends HttpServlet {
 			}
 			Board b = dao.getBoardDetail(bid);
 			request.setAttribute("board", b);
-
 			request.setAttribute("fileList", getFileList(b));
 
 			List<Reply> rlist = rdao.replyList(bid);
@@ -124,6 +127,7 @@ public class BoardController extends HttpServlet {
 				bid = Integer.parseInt(request.getParameter("bid"));
 				b = dao.getBoardDetail(bid);
 				request.setAttribute("binfo", b);
+				request.setAttribute("fileList", getFileList(b));
 				Forward(request, response, BUPDATE_V);
 
 			}
@@ -134,7 +138,19 @@ public class BoardController extends HttpServlet {
 				bid = Integer.parseInt(bidStr);
 				title = (String) request.getAttribute("title");
 				content = (String) request.getAttribute("content");
-				files = (String) request.getAttribute("files");
+				
+				/** 첨부파일 다중삭제 및 수정 */
+				b = dao.getBoardDetail(bid);
+				List<String> fileList =  getFileList(b);
+				List<String> delList = (List<String>) request.getAttribute("delList");
+				List<String> addList = (List<String>) request.getAttribute("addList");
+				
+				for(String dFile : delList) fileList.remove(dFile);
+				for(String aFile : addList) fileList.add(aFile);
+				
+				JSONUtil json = new JSONUtil();
+				files = json.stringify(fileList);
+				
 				b = new Board(bid, title, content, files);
 				dao.updateBoard(b);
 

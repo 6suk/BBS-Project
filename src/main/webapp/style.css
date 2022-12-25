@@ -562,15 +562,35 @@ input[type='file'] {
 /* 게시글 수정 */
 .board-input.files {
   display: flex;
+  align-items: center;
+  border: 1px solid #eee;
+  padding-block: 10px;
+  border-radius: 5px;
 }
 .board-input.file {
   display: flex;
   align-items: center;
+  flex: 1;
 }
 .board-input.file label {
-  flex: 1.5 0 0;
-  text-align: center;
+  width: 13%;
+  margin-left: 1.5rem;
+  font-weight: 800;
 }
-.board-input.file input {
-  flex: 8 0 0;
+
+.board-input .file input[type='checkbox'] {
+  margin-right: 8px;
+}
+.board-input .file input[type='file'] {
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  padding-inline: 0px;
+  padding-block: 12px;
+  width: 100%;
+}
+
+.space_border {
+  height: 100%;
+  border-right: 1px solid #eee;
 }

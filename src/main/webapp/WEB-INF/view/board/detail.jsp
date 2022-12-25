@@ -3,7 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%
-
 pageContext.setAttribute("newline", "\n");
 %>
 
@@ -66,14 +65,14 @@ pageContext.setAttribute("newline", "\n");
 							<div>
 								<p class="board-view-file">
 									<c:choose>
-									<c:when test="${fileList eq null}">
+									<c:when test="${fileList eq null or empty fileList or fileList eq ''}">
 									<span>첨부파일</span>
 									<span>없음</span>
 									</c:when>
 									<c:otherwise>
 									<span>첨부파일</span>
 									<c:forEach var="file" items="${fileList }">
-										<a href="/bbs/board/download?file=${file}">${file }</a>
+										<a href="/bbs/board/download?file=${file}" download="${file }">${file }</a>
 									</c:forEach>
 									</c:otherwise>
 									</c:choose>
@@ -87,7 +86,7 @@ pageContext.setAttribute("newline", "\n");
 						</div>
 
 						<div class="board-view-content py-5">
-							${fn:replace(board.bcontent, newline, '<br>') }</div>
+							${board.bcontent }</div>
 
 						<!-- 댓글 -->
 						<div class="reply-content pt-3">

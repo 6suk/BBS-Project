@@ -3,11 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 
+
 <%!
 private static final String LIST = "/bbs/user/list", LIST_VIEW = "/WEB-INF/view/user/list.jsp", LOGIN = "/bbs/user/login",
 	LOGOUT = "/bbs/user/logout", REG = "/bbs/user/register", UPDATE = "/bbs/user/update", DEL = "/bbs/user/delete",DEL_CON = "/bbs/user/deleteConfirm", BBS = "/bbs";
 private static final String LOGIN_VIEW = "/WEB-INF/view/bbs/user/login.jsp", REG_VIEW = "/WEB-INF/view/bbs/user/register.jsp",
-	UPDATE_VIEW = "/WEB-INF/view/bbs/user/update.jsp", DEL_VIEW = "/WEB-INF/view/bbs/user/delete.jsp", MSG = "/WEB-INF/view/bbs/user/msg.jsp";
+	UPDATE_VIEW = "/WEB-INF/view/bbs/user/update.jsp", DEL_VIEW = "/WEB-INF/view/bbs/user/delete.jsp", MSG = "/WEB-INF/view/bbs/user/msg.jsp",
+	FILEUP = "/bbs/board/fileUpload?dest";
 
 public static final String BLIST = "/bbs/board/list", WRITE = "/bbs/board/write", BUPDATE = "/bbs/board/update",
 	BDET = "/bbs/board/detail", BDEL = "/bbs/board/delete", BDEL_CON = "/bbs/board/deleteConfirm", REPLY = "/bbs/board/reply";

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,6 +28,7 @@ public class FileUpload extends HttpServlet {
 		String tmpPath = "c:/Temp/upload";
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=utf-8");
+		String dest = request.getParameter("dest");
 
 		/** 업로드된 파일을 저장할 저장소 */
 		DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -39,6 +41,7 @@ public class FileUpload extends HttpServlet {
 		fu.setFileSizeMax(1024 * 1024 * 10); // maxFileSize 파일 한개당 용량
 		
 		List<String> fileList = new ArrayList<>();
+		List<String> delList = new ArrayList<>();
 		
 		try {
 			List<FileItem> items = fu.parseRequest(request);
@@ -53,14 +56,23 @@ public class FileUpload extends HttpServlet {
 				}
 				// 다른 타입 request일 때
 				else if (i.isFormField()) {
-					request.setAttribute(i.getFieldName(), i.getString("UTF-8"));
+					//파일 삭제
+					if(i.getFieldName().equals("delFile")) {
+						delList.add(i.getString("UTF-8"));
+						File delfile = new File(tmpPath + File.separator + i.getString("UTF-8"));
+						delfile.delete();
+					}else request.setAttribute(i.getFieldName(), i.getString("UTF-8"));
 				}
 			}
-			JSONUtil json = new JSONUtil();
-			String jsonList = json.stringify(fileList);
-			request.setAttribute("files", jsonList);
 			
-			RequestDispatcher rd = request.getRequestDispatcher("/board/write");
+			if(dest.equals("update")) {
+				request.setAttribute("addList", fileList);
+				request.setAttribute("delList", delList);
+			}else {
+				request.setAttribute("fileList", fileList);
+			}
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/board/"+ dest);
 			rd.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
