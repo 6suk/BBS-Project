@@ -26,7 +26,7 @@
 								<p class="card-text text-center">
 									<br>
 									<button class="btn btn-primary"
-										onclick="location.href='/bbs/user/deleteConfirm?uid=${deluid}'">삭제</button>
+										onclick="location.href='<%= DEL_CON %>?uid=${deluid}'">삭제</button>
 									<button class="btn btn-secondary"
 										onclick="location.href='<%=LIST%>'">취소</button>
 								</p>

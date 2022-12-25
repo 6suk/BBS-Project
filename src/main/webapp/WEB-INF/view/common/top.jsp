@@ -1,20 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+
 <%!
-private static final String LIST = "/bbs/user/list", LIST_VIEW = "/bbs/user/list.jsp", LOGIN = "/bbs/user/login",
-LOGIN_VIEW = "/bbs/user/login.jsp", LOGOUT = "/bbs/user/logout", REG = "/bbs/user/register",
-REG_VIEW = "/bbs/user/register.jsp", UPDATE = "/bbs/user/update", UPDATE_VIEW = "/bbs/user/update.jsp",
-DEL = "/bbs/user/delete", MSG = "/bbs/user/msg.jsp";
-private static final String BLIST = "/bbs/board/list", WRITE = "/bbs/board/write", BUPDATE = "/bbs/board/update",
-BDETAIL = "/bbs/board/detail", BDEL = "/bbs/board/delete", BDEL_CON = "/bbs/board/deleteConfirm",
-SEARCH = "/bbs/board/search", REPLY = "/bbs/board/reply";
+private static final String LIST = "/bbs/user/list", LIST_VIEW = "/WEB-INF/view/user/list.jsp", LOGIN = "/bbs/user/login",
+	LOGOUT = "/bbs/user/logout", REG = "/bbs/user/register", UPDATE = "/bbs/user/update", DEL = "/bbs/user/delete",DEL_CON = "/bbs/user/deleteConfirm", BBS = "/bbs";
+private static final String LOGIN_VIEW = "/WEB-INF/view/bbs/user/login.jsp", REG_VIEW = "/WEB-INF/view/bbs/user/register.jsp",
+	UPDATE_VIEW = "/WEB-INF/view/bbs/user/update.jsp", DEL_VIEW = "/WEB-INF/view/bbs/user/delete.jsp", MSG = "/WEB-INF/view/bbs/user/msg.jsp";
+
+public static final String BLIST = "/bbs/board/list", WRITE = "/bbs/board/write", BUPDATE = "/bbs/board/update",
+	BDET = "/bbs/board/detail", BDEL = "/bbs/board/delete", BDEL_CON = "/bbs/board/deleteConfirm", REPLY = "/bbs/board/reply";
+public static final String BLIST_V = "/WEB-INF/view/bbs/board/list.jsp", WRITE_V = "/WEB-INF/view/bbs/board/write2.jsp",
+	BDEL_V = "/WEB-INF/view/bbs/board/delete.jsp", BDET_V = "/WEB-INF/view/bbs/board/detail.jsp",
+	BUPDATE_V = "/WEB-INF/view/bbs/board/update.jsp";
 %>
 
 <nav class="navbar navbar-expand navbar-light fixed-top">
       <div class="container-md px-md-5">
         <ul class="navbar-nav">
-          <a class="navbar-brand" href="<%= LIST %>"><img src="../img/logo5.png" class="logo"/>
+          <a class="navbar-brand" href="<%= LIST %>">
+          <img src='../img/logo.png' class="logo"/>
           </a>
           <li class="nav-item">
             <a class="nav-link" href="<%= BLIST %>">Home</a>

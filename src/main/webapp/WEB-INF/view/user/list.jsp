@@ -40,12 +40,12 @@
 							<td>${u.regDate}</td>
 							<td>
 							<c:choose>
-								<c:when test="${uid ne u.uid}">
-									<button class="btn action subcolor" type="button" disabled>수정</button>
-								</c:when>
-								<c:otherwise>
+								<c:when test="${uid eq u.uid or uid eq 'admin'}">
 									<button class="btn action subcolor" type="button"
 										onclick="location.href='<%= UPDATE %>?uid=${u.uid}'">수정</button>
+								</c:when>
+								<c:otherwise>
+									<button class="btn action subcolor" type="button" disabled>수정</button>
 								</c:otherwise>
 							</c:choose> <%-- 삭제 버튼 시작 --%> <c:choose>
 								<c:when test="${uid ne 'admin'}">

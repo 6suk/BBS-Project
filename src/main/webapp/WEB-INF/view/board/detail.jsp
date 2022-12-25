@@ -37,17 +37,17 @@ pageContext.setAttribute("newline", "\n");
 
 						<div class="content multibtn">
 							<button class="btn action maincolor"
-								onclick="location.href='/bbs/board/list?page=${currentBoardPage}'">
+								onclick="location.href='<%= BLIST %>?page=${currentBoardPage}'">
 								목록</button>
 							<div class="space3"></div>
 							<c:choose>
 							<c:when test="${board.uid eq uid }">
 							<button class="btn action subcolor"
-								onclick="location.href='/bbs/board/update?bid=${board.bid}'">
+								onclick="location.href='<%= BUPDATE %>?bid=${board.bid}'">
 								수정</button>
 							<div class="space3"></div>
 							<button class="btn action subcolor"
-								onclick="location.href='/bbs/board/delete?bid=${board.bid}'">
+								onclick="location.href='<%= BDEL %>?bid=${board.bid}'">
 								삭제</button>
 							</c:when>
 							<c:otherwise>

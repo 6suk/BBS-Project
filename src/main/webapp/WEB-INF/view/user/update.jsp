@@ -24,7 +24,7 @@
 						<th>아이디</th>
 						<td><input type="hidden" name="uid" value="${user.uid}">
 							<input type="text" name="uid" placeholder="아이디" maxlength="20"
-							required disabled value="${uid}" /></td>
+							required disabled value="${user.uid}" /></td>
 					</tr>
 					<tr>
 						<th>패스워드</th>

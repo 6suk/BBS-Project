@@ -19,12 +19,15 @@ import misc.JSONUtil;
 		"/board/reply" })
 public class BoardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	public static final String BLIST = "/board/list", WRITE = "/board/write", BUPDATE = "/board/update",
+			BDET = "/board/detail", BDEL = "/board/delete", BDEL_CON = "/board/deleteConfirm", REPLY = "/board/reply",
+			BBS = "/bbs";
+	public static final String BLIST_V = "/WEB-INF/view/board/list.jsp", WRITE_V = "/WEB-INF/view/board/write.jsp",
+			BDEL_V = "/WEB-INF/view/board/delete.jsp", BDET_V = "/WEB-INF/view/board/detail.jsp",
+			BUPDATE_V = "/WEB-INF/view/board/update.jsp", MSG = "/WEB-INF/view/user/msg.jsp";
 	private RequestDispatcher rd;
 	private static BoardDao dao = new BoardDao();
 	private ReplyDao rdao = new ReplyDao();
-	private static final String BLIST = "/board/list", WRITE = "/board/write", BUPDATE = "/board/update",
-			BDETAIL = "/board/detail", BDEL = "/board/delete", BDEL_CON = "/board/deleteConfirm",
-			REPLY = "/board/reply", MSG = "/user/msg.jsp";
 	private Board b;
 	private String uid, pwd, Uname, title, content, files, field, query;
 	private int page, bid;
@@ -33,7 +36,6 @@ public class BoardController extends HttpServlet {
 
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.setCharacterEncoding("utf8");
 		String method = request.getMethod();
 		HttpSession ss = request.getSession();
 		ss.setAttribute("menu", "board");
@@ -46,7 +48,6 @@ public class BoardController extends HttpServlet {
 		switch (request.getServletPath()) {
 
 		case BLIST:
-			// LIST + SEARCH (POST)
 			request.setAttribute("today", today);
 			/** 페이지네이션 세팅 */
 			setPagination(request, page, field, query);
@@ -54,13 +55,13 @@ public class BoardController extends HttpServlet {
 			/** 리스트 출력 */
 			list = dao.boardList(field, query, page);
 			request.setAttribute("boardList", list);
-			Forward(request, response, BLIST + ".jsp");
+			Forward(request, response, BLIST_V);
 			break;
 
 		case WRITE:
 			/** GET */
 			if (method.equals("GET")) {
-				Forward(request, response, WRITE + ".jsp");
+				Forward(request, response, WRITE_V);
 			}
 			/** POST */
 			else {
@@ -69,11 +70,11 @@ public class BoardController extends HttpServlet {
 				files = (String) request.getAttribute("files");
 				b = new Board(ssuid, title, content, files);
 				dao.insertBoard(b);
-				response.sendRedirect("/bbs" + BLIST);
+				response.sendRedirect(BBS + BLIST);
 			}
 			break;
 
-		case BDETAIL:
+		case BDET:
 			bid = Integer.parseInt(request.getParameter("bid"));
 			uid = request.getParameter("uid");
 			// 댓글 작성 후 조회수 증가 막기
@@ -86,17 +87,12 @@ public class BoardController extends HttpServlet {
 			Board b = dao.getBoardDetail(bid);
 			request.setAttribute("board", b);
 
-			String jsonFiles = b.getFiles();
-			if (jsonFiles != null && jsonFiles != "") {
-				JSONUtil json = new JSONUtil();
-				List<String> fileList = json.parse(jsonFiles);
-				request.setAttribute("fileList", fileList);
-			}
+			request.setAttribute("fileList", getFileList(b));
 
 			List<Reply> rlist = rdao.replyList(bid);
 			request.setAttribute("rList", rlist);
 
-			Forward(request, response, BDETAIL + ".jsp");
+			Forward(request, response, BDET_V);
 			break;
 
 		case REPLY:
@@ -107,19 +103,19 @@ public class BoardController extends HttpServlet {
 			Reply reply = new Reply(content, ismine, ssuid, bid);
 			rdao.insert(reply);
 			dao.replyCountUpdate(bid);
-			response.sendRedirect("/bbs/board/detail?bid=" + bid + "&uid=" + uid + "&option=DNI" + "#content");
+			response.sendRedirect(BBS + BDET + "?bid=" + bid + "&uid=" + uid + "&option=DNI" + "#content");
 			break;
 
 		case BDEL:
 			bid = Integer.parseInt(request.getParameter("bid"));
 			request.setAttribute("delbid", bid);
-			Forward(request, response, BDEL + ".jsp");
+			Forward(request, response, BDEL_V);
 			break;
 
 		case BDEL_CON:
 			bid = Integer.parseInt(request.getParameter("bid"));
 			dao.delBoard(bid);
-			response.sendRedirect("/bbs" + BLIST + "?page=" + ss.getAttribute("currentBoardPage"));
+			response.sendRedirect(BBS + BLIST + "?page=" + ss.getAttribute("currentBoardPage"));
 			break;
 
 		case BUPDATE:
@@ -128,15 +124,17 @@ public class BoardController extends HttpServlet {
 				bid = Integer.parseInt(request.getParameter("bid"));
 				b = dao.getBoardDetail(bid);
 				request.setAttribute("binfo", b);
-				Forward(request, response, BUPDATE + ".jsp");
+				Forward(request, response, BUPDATE_V);
+
 			}
 			/** POST */
 			else {
 				// bid title content files
-				bid = Integer.parseInt(request.getParameter("bid"));
-				title = request.getParameter("title");
-				content = request.getParameter("content");
-				files = request.getParameter("files");
+				String bidStr = (String) request.getAttribute("bid");
+				bid = Integer.parseInt(bidStr);
+				title = (String) request.getAttribute("title");
+				content = (String) request.getAttribute("content");
+				files = (String) request.getAttribute("files");
 				b = new Board(bid, title, content, files);
 				dao.updateBoard(b);
 
@@ -159,17 +157,6 @@ public class BoardController extends HttpServlet {
 		rd.forward(request, response);
 	}
 
-	/** ver1 pagination */
-	private static List<String> getPagination(String field, String query) {
-		BoardDao dao = new BoardDao();
-		int totalPages = dao.getBoardPageCnt(field, query);
-		List<String> pageList = new ArrayList<>();
-		for (int i = 1; i <= totalPages; i++)
-			pageList.add(String.valueOf(i));
-
-		return pageList;
-	}
-
 	/** ver2 pagination */
 	private static void setPagination(HttpServletRequest request, int page, String field, String query) {
 		HttpSession ss = request.getSession();
@@ -183,6 +170,17 @@ public class BoardController extends HttpServlet {
 		/** 세션 세팅 / 리퀘스트 세팅 */
 		ss.setAttribute("currentBoardPage", page); // 현재 페이지 세션 저장
 		request.setAttribute("pageList", pageList); // 페이지네이션 리스트 저장
+	}
+
+	private static List<String> getFileList(Board b) {
+		String jsonFiles = b.getFiles();
+		if (jsonFiles != null && jsonFiles != "") {
+			JSONUtil json = new JSONUtil();
+			List<String> fileList = json.parse(jsonFiles);
+
+			return fileList;
+		}
+		return null;
 	}
 
 }

@@ -28,7 +28,8 @@
 				<c:otherwise>
 					<c:choose>
 						<c:when test="${fn:length(uname) >= 4}">
-							<div class="intro-msg-main p-2 pb-3" style="align-items: flex-end;">
+							<div class="intro-msg-main p-2 pb-3"
+								style="align-items: flex-end;">
 								<h4 style="line-height: 1.3;">${uname}님<br>환영합니다!
 								</h4>
 								<span class="material-symbols-outlined"
@@ -71,8 +72,8 @@
 
 					<div class="intro-btn">
 						<button class="btn mdi100 subcolor mx-1"
-							onclick="location.href='/bbs/user/update?uid=${uid}'">
-							정보 수정하기</button>
+							onclick="location.href='/bbs/user/update?uid=${uid}'">정보
+							수정하기</button>
 						<button class="btn mdi100 graycolor mx-1"
 							onclick="location.href='/bbs/user/logout'">로그아웃</button>
 					</div>

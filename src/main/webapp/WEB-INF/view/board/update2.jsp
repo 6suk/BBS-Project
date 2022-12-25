@@ -6,6 +6,7 @@
 <html lang="ko">
 <head>
 <%@ include file="../common/heading.jsp"%>
+<script src="https://cdn.ckeditor.com/4.18.0/standard/ckeditor.js"></script>
 </head>
 
 <body>
@@ -19,20 +20,22 @@
 			<div class="inputtb content col-lg-8">
 				<!-- 타이틀 -->
 				<div class="inputtb content-title pb-4">
-					<h3>${binfo.bid }번 게시글 수정</h3>
+					<h3>${binfo.bid }번게시글수정</h3>
 					<div class="">
 						<button class="btn small subcolor"
-							onclick="location.href='/bbs/board/list?page=${currentBoardPage}'">&lt; Back</button>
+							onclick="location.href='<%= BLIST %>?page=${currentBoardPage}'">&lt;
+							Back</button>
 					</div>
 				</div>
 				<!-- 타이틀 끝 -->
 
-				<form action="/bbs/board/update" class="pt-4 mx-3" method="post">
-				<input type="hidden" name="bid" value="${binfo.bid }">
+				<form action="/bbs/board/upDateFileUpload" class="pt-4 mx-3"
+					method="post" enctype="multipart/form-data">
+					<input type="hidden" name="bid" value="${binfo.bid }">
 					<table class="inputtb board-desc">
 						<tr>
 							<td><input class="board-input" type="text" placeholder="제목"
-								name="title" maxlength="128" required value="${binfo.btitle }"/></td>
+								name="title" maxlength="128" required value="${binfo.btitle }" /></td>
 						</tr>
 						<tr>
 							<td><textarea class="board-input" name="content"
@@ -40,10 +43,17 @@
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<!-- <label for="files"></label> --> <input class="board-input"
-								type="file" placeholder="첨부파일" name="files" multiple value="${binfo.files }"/>
-							</td>
+							<td><div class="board-input files" style="display: flex;">
+									<div class="board-input files">
+										<label for="files">삭제</label>
+										<input class="board-input" type="file" placeholder="첨부파일1" name="files" />
+									</div>
+									<div class="space10"></div>
+									<div class="board-input files">
+										<label for="files">추가</label> <input class="board-input"
+											type="file" placeholder="첨부파일1" name="files" />
+									</div>
+								</div></td>
 						</tr>
 						<tr>
 							<td colspan="2" class="multibtn pt-4"><input type="submit"
@@ -57,5 +67,12 @@
 		</div>
 	</div>
 	<%@ include file="../common/bottom.jsp"%>
+	<script>
+		CKEDITOR.replace('content', {
+			filebrowserImageUploadUrl : '/bbs/board/imageupload',
+			filebrowserUploadMethod : 'form',
+			height : 400
+		});
+	</script>
 </body>
 </html>

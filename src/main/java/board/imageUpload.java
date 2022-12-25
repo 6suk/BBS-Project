@@ -24,7 +24,6 @@ public class imageUpload extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String tmpPath = "c:/Temp/upload";
         String callback = request.getParameter("CKEditorFuncNum");
-        System.out.println(callback);
         String error = "";
         String url = null;		// 이미지 다운로드 주소
         
@@ -57,7 +56,7 @@ public class imageUpload extends HttpServlet {
                 }
                 // 다른 타입 request일 때
                 else if (i.isFormField()) {
-                    System.out.println(i.getFieldName() + ": " + i.getString("UTF-8"));
+                    
                 }
             }
         } catch (Exception e) {
@@ -68,7 +67,6 @@ public class imageUpload extends HttpServlet {
 	                + "     window.parent.CKEDITOR.tools.callFunction(" 
 	                +           callback + ", '" + url + "', '" + error + "'); "
 	                + "</script>";
-        System.out.println(data);
         response.setContentType("text/html; charset=utf-8");
         PrintWriter out = response.getWriter();
         out.println(data);

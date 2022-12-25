@@ -22,7 +22,7 @@
 				<div class="content-title pb-3">
 					<h3>게시판</h3>
 					<div class="">
-						<button class="btn mdi maincolor" onclick="location.href='/bbs/board/write'">
+						<button class="btn mdi maincolor" onclick="location.href='<%= WRITE %>'">
 							글쓰기</button>
 					</div>
 				</div>
@@ -40,14 +40,14 @@
 						<c:choose>
 						<c:when test="${b.replyCnt > 0 }">
 						<td class = "board-list title">
-							<a href = "/bbs/board/detail?bid=${b.bid }&uid=${b.uid }">${b.btitle}
+							<a href = "<%=BDET %>?bid=${b.bid }&uid=${b.uid }">${b.btitle}
 							<span class = "content-reply">${b.replyCnt }</span>
 							</a>						
 						</td>						
 						</c:when>
 						<c:otherwise>
 						<td class = "board-list title">
-							<a href = "/bbs/board/detail?bid=${b.bid }&uid=${b.uid }">${b.btitle}</a>						
+							<a href = "<%=BDET %>?bid=${b.bid }&uid=${b.uid }">${b.btitle}</a>						
 						</td>						
 						</c:otherwise>
 						</c:choose>

@@ -26,9 +26,9 @@
 								<p class="card-text text-center">
 									<br>
 									<button class="btn btn-primary"
-										onclick="location.href='/bbs/board/deleteConfirm?bid=${delbid}'">삭제</button>
+										onclick="location.href='<%= DEL_CON %>?bid=${delbid}'">삭제</button>
 									<button class="btn btn-secondary"
-										onclick="location.href='/bbs/board/list'">취소</button>
+										onclick="location.href='<%= BLIST %>'">취소</button>
 								</p>
 							</div>
 						</div>

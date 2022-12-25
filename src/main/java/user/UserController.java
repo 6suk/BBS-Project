@@ -2,6 +2,7 @@ package user;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -14,49 +15,40 @@ import javax.servlet.http.HttpSession;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import board.BoardController;
 
 @WebServlet({ "/user/list", "/user/login", "/user/register", "/user/logout", "/user/delete", "/user/deleteConfirm",
 		"/user/update" })
 public class UserController extends HttpServlet {
+	public static final String LIST = "/user/list", LOGIN = "/user/login", LOGOUT = "/user/logout",
+			REG = "/user/register", UPDATE = "/user/update", DEL = "/user/delete", DEL_CON = "/user/deleteConfirm",
+			BBS = "/bbs";
+	public static final String LOGIN_VIEW = "/WEB-INF/view/user/login.jsp", LIST_VIEW = "/WEB-INF/view/user/list.jsp",
+			REG_VIEW = "/WEB-INF/view/user/register.jsp", UPDATE_VIEW = "/WEB-INF/view/user/update.jsp",
+			DEL_VIEW = "/WEB-INF/view/user/delete.jsp", MSG = "/WEB-INF/view/user/msg.jsp";
 	private static final long serialVersionUID = 1L;
 	private RequestDispatcher rd;
-	private UserDAO dao = new UserDAO();
-	private static final String LIST = "/user/list", LIST_VIEW = "/user/list.jsp", LOGIN = "/user/login",
-			LOGIN_VIEW = "/user/login.jsp", LOGOUT = "/user/logout", REG = "/user/register",
-			REG_VIEW = "/user/register.jsp", UPDATE = "/user/update", UPDATE_VIEW = "/user/update.jsp",
-			DEL = "/user/delete", MSG = "/user/msg.jsp";
-	private static final String BLIST = "/board/list", WRITE = "/board/write", BUPDATE = "/board/update",
-			BDETAIL = "/board/detail", BDEL = "/board/delete", BDEL_CON = "/board/deleteConfirm",
-			SEARCH = "/board/search", REPLY = "/board/reply";
+	private static UserDAO dao = new UserDAO();
 	private User u;
 	private String uid, pwd, Uname, email;
-	private int page;
 
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.setCharacterEncoding("utf8");
-		response.setContentType("text/html; charset=utf8");
 		String method = request.getMethod();
 		HttpSession ss = request.getSession();
-		String[] emailReg;
-
+		int page = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page"));
+		System.out.println(page);
 		switch (request.getServletPath()) {
 		case LIST:
-			if (request.getParameter("page") == null) {
-				response.sendRedirect("/bbs" + LIST + "?page=1");
-			} else {
-				ss.setAttribute("menu", "user");
-				
-				/** 페이지네이션 */
-				page = Integer.parseInt(request.getParameter("page"));
-				ss.setAttribute("currentUserPage", page);
-				request.setAttribute("pageList", getPagination());
+			ss.setAttribute("menu", "user");
 
-				/** 리스트 */
-				List<User> list = dao.userList(page);
-				request.setAttribute("userList", list);
-				Forward(request, response, LIST_VIEW);
-			}
+			/** 페이지네이션 */
+			setPagination(request, page);
+
+			/** 리스트 */
+			List<User> list = dao.userList(page);
+			request.setAttribute("userList", list);
+			Forward(request, response, LIST_VIEW);
 			break;
 
 		case REG:
@@ -71,10 +63,11 @@ public class UserController extends HttpServlet {
 				String[] pwdBox = request.getParameterValues("pwd");
 				Uname = request.getParameter("uname");
 				email = request.getParameter("email");
-				
-				if(email.isEmpty()) u = new User(uid, pwdBox[0], Uname);
-				else u = new User(uid, pwdBox[0], Uname, email);
-				
+
+				if (email.isEmpty())
+					u = new User(uid, pwdBox[0], Uname);
+				else
+					u = new User(uid, pwdBox[0], Uname, email);
 
 				/** 아이디 중복 검사 */
 				if (dao.getUserInfo(uid).getUid() == null) {
@@ -89,7 +82,7 @@ public class UserController extends HttpServlet {
 						SetSession(ss, uid);
 						// 메세지 -> LIST
 						request.setAttribute("msg", u.getUname() + "님 환영합니다!");
-						request.setAttribute("url", BLIST);
+						request.setAttribute("url", BoardController.BLIST);
 						Forward(request, response, MSG);
 					}
 				} else {
@@ -119,7 +112,7 @@ public class UserController extends HttpServlet {
 						SetSession(ss, uid);
 						// 메세지 -> LIST
 						request.setAttribute("msg", u.getUname() + "님 환영합니다!");
-						request.setAttribute("url", BLIST);
+						request.setAttribute("url", BoardController.BLIST);
 						Forward(request, response, MSG);
 					} else { // 패스워드 불일치
 						// 메세지 -> LOGIN
@@ -160,25 +153,37 @@ public class UserController extends HttpServlet {
 				break;
 			case "POST":
 				uid = request.getParameter("uid");
-//				pwd = request.getParameter("pwd");
 				Uname = request.getParameter("name");
 				String pwdbox[] = request.getParameterValues("pwd");
 
 				/** 이메일 미기입 시 */
 				email = request.getParameter("email");
-				if(email.isEmpty()) u = new User(uid, pwdbox[0], Uname);
-				else u = new User(uid, pwdbox[0], Uname, email);
-						
-				if (pwd.isEmpty()) {
+				if (email.isEmpty())
+					u = new User(uid, pwdbox[0], Uname);
+				else
+					u = new User(uid, pwdbox[0], Uname, email);
+				
+				/** 패스워드 검증 */
+				if (pwdbox[0].isEmpty() && pwdbox[1].isEmpty()) {
 					dao.nonPwdUpdateUser(u);
 					SetSession(ss, uid);
-					response.sendRedirect(LIST);
-				} else if (pwdbox[0].equals(pwdbox[1])) {
-					dao.updateUser(u);
-					SetSession(ss, uid);
+					
 					// 메세지 -> LIST
 					request.setAttribute("msg", uid + " : 정보 수정 완료!");
-					request.setAttribute("url", LIST+"?page="+ss.getAttribute("currentUserPage"));
+					request.setAttribute("url", LIST + "?page=" + ss.getAttribute("currentUserPage"));
+					Forward(request, response, MSG);
+				} else if (pwdbox[0].equals(pwdbox[1])) {
+					dao.updateUser(u);
+					
+					//어드민이 수정했을때 (추가)
+					if (ss.getAttribute("uid").equals("admin"))
+						SetSession(ss, "admin");
+					else
+						SetSession(ss, uid);
+
+					// 메세지 -> LIST
+					request.setAttribute("msg", uid + " : 정보 수정 완료!");
+					request.setAttribute("url", LIST + "?page=" + ss.getAttribute("currentUserPage"));
 					Forward(request, response, MSG);
 				} else {
 					request.setAttribute("msg", "입력된 패스워드가 다릅니다!");
@@ -193,7 +198,7 @@ public class UserController extends HttpServlet {
 			ss.setAttribute("menu", "user");
 			uid = request.getParameter("uid");
 			request.setAttribute("deluid", uid);
-			Forward(request, response, DEL + ".jsp");
+			Forward(request, response, DEL_VIEW);
 			break;
 
 		case "/user/deleteConfirm":
@@ -201,7 +206,7 @@ public class UserController extends HttpServlet {
 			uid = request.getParameter("uid");
 			u = dao.getUserInfo(uid);
 			dao.delUser(uid);
-			response.sendRedirect("/bbs"+LIST);
+			response.sendRedirect(BBS + LIST);
 			break;
 
 		default:
@@ -225,14 +230,20 @@ public class UserController extends HttpServlet {
 		ss.setAttribute("email", info.getEmail());
 		System.out.println("[Session Setting] : " + ss.getAttribute("uid") + ", " + ss.getAttribute("uname"));
 	}
-	
-	private static List<String> getPagination() {
-		UserDAO dao = new UserDAO();
-		int totalPages = dao.getUserPageCnt();
+
+	/** ver2 pagination */
+	private static void setPagination(HttpServletRequest request, int page) {
+		HttpSession ss = request.getSession();
 		List<String> pageList = new ArrayList<>();
+
+		/** DB에서 총 페이지 개수 받아 pageList에 담기 */
+		int totalPages = dao.getUserPageCnt();
 		for (int i = 1; i <= totalPages; i++)
 			pageList.add(String.valueOf(i));
-		return pageList;
+
+		/** 세션 세팅 / 리퀘스트 세팅 */
+		ss.setAttribute("currentUserPage", page); // 현재 페이지 세션 저장
+		request.setAttribute("pageList", pageList); // 페이지네이션 리스트 저장
 	}
 
 }

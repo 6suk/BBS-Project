@@ -558,3 +558,19 @@ input[type='file'] {
     display: inline-block;
   }
 }
+
+/* 게시글 수정 */
+.board-input.files {
+  display: flex;
+}
+.board-input.file {
+  display: flex;
+  align-items: center;
+}
+.board-input.file label {
+  flex: 1.5 0 0;
+  text-align: center;
+}
+.board-input.file input {
+  flex: 8 0 0;
+}

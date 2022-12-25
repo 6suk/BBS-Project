@@ -21,12 +21,12 @@
 					<h3>게시글 쓰기</h3>
 					<div class="">
 						<button class="btn small subcolor"
-							onclick="location.href='/bbs/board/list?page=${currentBoardPage}'">&lt; List</button>
+							onclick="location.href='<%= BLIST %>?page=${currentBoardPage}'">&lt; List</button>
 					</div>
 				</div>
 				<!-- 타이틀 끝 -->
 
-				<form action="/board/fileUpload" class="pt-4 mx-3" method="post" enctype="multipart/form-data">
+				<form action="/bbs/board/fileUpload" class="pt-4 mx-3" method="post" enctype="multipart/form-data">
 					<table class="inputtb board-desc">
 						<tr>
 							<td><input style = "border: 1px solid #d1d1d1;" class="board-input" type="text" placeholder="제목"
