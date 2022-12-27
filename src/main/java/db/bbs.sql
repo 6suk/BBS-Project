@@ -2,6 +2,7 @@ SET SESSION FOREIGN_KEY_CHECKS=0;
 
 /* Drop Tables */
 
+DROP TABLE IF EXISTS bookMark;
 DROP TABLE IF EXISTS reply;
 DROP TABLE IF EXISTS board;
 DROP TABLE IF EXISTS user;
@@ -26,11 +27,18 @@ CREATE TABLE board
 );
 
 
+CREATE TABLE bookMark
+(
+	uid varchar(20) NOT NULL,
+	bid int NOT NULL,
+);
+
+
 CREATE TABLE reply
 (
 	rid int NOT NULL AUTO_INCREMENT,
 	content varchar(128) NOT NULL,
-	regDate date DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	regDate datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	isMine int DEFAULT 0 NOT NULL,
 	uid varchar(20) NOT NULL,
 	bid int NOT NULL,
@@ -44,7 +52,7 @@ CREATE TABLE user
 	pwd char(60) NOT NULL,
 	uname varchar(20) NOT NULL,
 	email varchar(32),
-	regDate date DEFAULT (CURRENT_DATE) NOT NULL,
+	regDate datetime DEFAULT (CURRENT_DATE) NOT NULL,
 	isDel int DEFAULT 0 NOT NULL,
 	PRIMARY KEY (uid)
 );
@@ -52,6 +60,14 @@ CREATE TABLE user
 
 
 /* Create Foreign Keys */
+
+ALTER TABLE bookMark
+	ADD FOREIGN KEY (bid)
+	REFERENCES board (bid)
+	ON UPDATE RESTRICT
+	ON DELETE RESTRICT
+;
+
 
 ALTER TABLE reply
 	ADD FOREIGN KEY (bid)
@@ -62,6 +78,14 @@ ALTER TABLE reply
 
 
 ALTER TABLE board
+	ADD FOREIGN KEY (uid)
+	REFERENCES user (uid)
+	ON UPDATE RESTRICT
+	ON DELETE RESTRICT
+;
+
+
+ALTER TABLE bookMark
 	ADD FOREIGN KEY (uid)
 	REFERENCES user (uid)
 	ON UPDATE RESTRICT

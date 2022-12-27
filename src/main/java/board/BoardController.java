@@ -189,6 +189,7 @@ public class BoardController extends HttpServlet {
 	}
 
 	private static List<String> getFileList(Board b) {
+		// DB에 있는 JSON 파일 -> LIST로 변환 후 리턴
 		String jsonFiles = b.getFiles();
 		if (jsonFiles != null && jsonFiles != "") {
 			JSONUtil json = new JSONUtil();
